@@ -1,9 +1,11 @@
 {
   "name": "mca-leads-api",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "dependencies": {
     "axios": "^1.5.0",
-    "cheerio": "^1.0.0-rc.12"
+    "cheerio": "^1.0.0-rc.12",
+    "robots-parser": "^3.1.0",
+    "p-limit": "^4.0.0"
   }
 }
