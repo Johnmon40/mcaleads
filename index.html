@@ -1,39 +1,28 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Recent UCC Filings</title>
+<meta charset="utf-8" />
+<title>UCC Leads (aggregated)</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <style>
-  body { background:#0b1628; color:white; font-family:Arial; padding:20px; }
-  h1 { color:#ffd44f; }
-  .item { background:#13223e; padding:10px; margin:6px 0; border-radius:6px; }
-  a { color:#4fc3ff; text-decoration:none; }
+  body{font-family:Inter,Arial,sans-serif;background:#071028;color:#e6eef9;margin:0;padding:28px}
+  h1{color:#ffd166;margin:0 0 14px}
+  .note{color:#9fb0c8;margin-bottom:12px}
+  .lead{background:#071a2a;border:1px solid #123047;padding:12px;border-radius:10px;margin-bottom:10px}
+  .name{font-weight:700;color:#ffd166}
+  .meta{color:#9fb0c8;font-size:13px;margin-top:6px}
+  a{color:#7fd4ff}
+  .loading{color:#cfe7ff}
 </style>
 </head>
 <body>
-<h1>Recent UCC Filings (Delaware)</h1>
-<div id="results">Loading...</div>
+  <h1>Recent UCC Filings (aggregated)</h1>
+  <div class="note">Auto-aggregates public state UCC feeds and tries to find contact info. Coverage depends on state feeds & public websites.</div>
+  <div id="list"><div class="loading">Loading…</div></div>
 
 <script>
-async function loadUCC() {
-  const res = await fetch("/api/ucc");
-  const data = await res.json();
-  const out = document.getElementById("results");
-
-  if (!data.items?.length) {
-    out.innerHTML = "No results found.";
-    return;
-  }
-
-  out.innerHTML = data.items.map(i => `
-    <div class="item">
-      <strong>${i.title}</strong><br>
-      <a href="${i.link}" target="_blank">${i.link}</a>
-    </div>
-  `).join("");
-}
-
-loadUCC();
-</script>
-</body>
-</html>
+async function load(){
+  const el = document.getElementById('list');
+  try{
+    const r = await fetch('/api/leads');
+    if(!r.ok){ el.innerHTML = `<div class="meta">Error: ${r.status}<
