@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Recent UCC Filings</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<style>
+  body{font-family:Arial,system-ui;background:#0b1628;color:#eaf3ff;margin:0;padding:28px}
+  h1{color:#ffd166;margin:0 0 10px}
+  .note{color:#9fb0c8;margin-bottom:12px}
+  .item{background:#14243f;border:1px solid #193458;padding:12px;border-radius:8px;margin:10px 0}
+  a{color:#7fd4ff}
+</style>
+</head>
+<body>
+  <h1>Recent UCC Filings</h1>
+  <div class="note">Auto-aggregated from public feeds (defaults to Delaware). Add more states via FEED_URLS in Vercel.</div>
+  <div id="results">Loading...</div>
+
+<script>
+async function load(){
+  try{
+    const r = await fetch('/api/ucc', { cache: 'no-store' });
+    if(!r.ok){ document.getElementById('results').textContent = 'API error: '+r.status; return; }
+    const data = await r.json();
+    const items = data.items || [];
+    if(items.length === 0){ document.getElementById('results').textContent = 'No filings found.'; return; }
+    document.getElementById('results').innerHTML = items.map(i=>`
+      <div class="item">
+        <strong>${escapeHtml(i.title||'Untitled')}</strong><br>
+        <a target="_blank" href="${i.link}">View source</a>
+        ${i.state ? ` • <span>${i.state}</span>` : ''}
+      </div>
+    `).join('');
+  }catch(e){
+    document.getElementById('results').textContent = 'Load failed: '+e.message;
+  }
+}
+function escapeHtml(s){return (s||'').replace(/[&<>"']/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]))}
+load();
+</script>
+</body>
+</html>
